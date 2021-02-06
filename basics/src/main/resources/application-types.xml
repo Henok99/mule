@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="productJson" format="json">
+      <types:shape format="weave" example="product.json"><![CDATA[%dw 2.0
+
+type productJson = {|
+  productId: Number {"typeId": "int"}, 
+  name: String, 
+  description: String, 
+  originalPrice: Number {"typeId": "int"}, 
+  offer: {|
+    discountPercentage: Number {"typeId": "int"}, 
+    offerValidUntil: String
+  |}, 
+  brandName: String, 
+  images: Array<String>
+|} {"example": "{\\\"productId\\\":1,\\\"name\\\":\\\"Hp Pavilion laptop\\\",\\\"description\\\":\\\"Hp Laptop \\\",\\\"originalPrice\\\":1000,\\\"offer\\\":{\\\"discountPercentage\\\":25,\\\"offerValidUntil\\\":\\\"2019-06-29\\\"},\\\"brandName\\\":\\\"HP\\\",\\\"images\\\":[\\\"image1.jpeg\\\",\\\"image2.jpeg\\\",\\\"image3.jpeg\\\"]}"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="empJSON" format="json">
+      <types:shape format="weave" example="emp.json"><![CDATA[%dw 2.0
+
+type empJSON = {|
+  empID: Number {"typeId": "int"}, 
+  empName: String, 
+  empEmail: String, 
+  empStatus: String
+|} {"example": "{\\\"empID\\\":100,\\\"empName\\\":\\\"Henok\\\",\\\"empEmail\\\":\\\"Henok@test.com\\\",\\\"empStatus\\\":\\\"A\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#7962892d-4f63-4019-930b-ef03b9391c43">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="empJSON"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="empJSON"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

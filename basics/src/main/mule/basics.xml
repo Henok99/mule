@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="93b016be-8786-4453-9471-fd6c0734eda2" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="basicsFlow1" doc:id="8085a0d3-a12f-4a2c-8d54-31e6b209de21" >
+		<http:listener doc:name="Listener" doc:id="d69a111e-7040-4523-8dbf-2a2141b30179" config-ref="HTTP_Listener_config" path="/"/>
+		<set-payload value="Hello Henoke" doc:name="Set Payload" doc:id="57cd691e-8e01-4d4b-a822-8f2f43a07857" />
+		<logger level="INFO" doc:name="Logger" doc:id="6c78962a-0464-400a-9b44-e722f17fcdf1" />
+	</flow>
+	<flow name="basicsFlow" doc:id="85db5abb-0901-48b1-9dd4-c17f236355e6" >
+		<ee:transform doc:name="Transform Message" doc:id="7962892d-4f63-4019-930b-ef03b9391c43" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+---
+{
+	empID: payload.empID,
+	empName: payload.empName,
+	empEmail: payload.empEmail,
+	empStatus: payload.empStatus
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="basicsFlow2" doc:id="71a8f90e-6a79-4c9a-a898-85bc92698b3f" >
+		<ee:transform doc:name="Transform Message" doc:id="3ad228c3-26a0-4a40-95a5-eb6e4aff96a5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+
+var employee = {
+	empname: null,
+	empLocation: "MAryland",
+	empExperience :"12",
+	isActive:false			
+}
+---
+{
+	empname: employee.empname as String default "",
+	empLocation: employee.empLocation as String default "",
+	empExperience : employee.empExperience as Number default 0,
+	isActive:employee.isActive as Boolean default true
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
